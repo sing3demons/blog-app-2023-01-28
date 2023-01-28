@@ -21,3 +21,21 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: p@ssw0rd
       ME_CONFIG_MONGODB_URL: mongodb://root:p%40ssw0rd@mongo:27017
+  backend:
+    image: sing3demosn/blog
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://root:p%40ssw0rd@mongo:27017
+      - MONGO_DATABASE=node-api
+      - ACCESS_TOKEN_SECRET=EFDBD743-65D6-4B1E-A99C-B6EDC89E6512
+      - REFRESH_TOKEN_SECRET=020E085C-4C7D-4FDB-A11F-3EADA8F2464C
+      - CLIENT_URL=http://localhost:3000
+    depends_on:
+      - mongo
