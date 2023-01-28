@@ -53,8 +53,8 @@ const jwtValidate = (req, res, next) => {
 
     const token = req.headers['authorization'].replace('Bearer ', '')
 
-    const { sub } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    const tokenDt = { userId: sub }
+    const { sub, exp } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    const tokenDt = { userId: sub, exp }
 
     req.tokenDt = tokenDt
     next()
@@ -65,9 +65,15 @@ const jwtValidate = (req, res, next) => {
 }
 
 router.get('/profile', jwtValidate, async (req, res) => {
-  const { userId } = req.tokenDt
-  const user = await User.findById(userId)
-  res.json(user)
+  const { userId, exp } = req.tokenDt
+  const { _id, username } = await User.findById(userId)
+
+  const response = {
+    _id,
+    username,
+    expiresIn: exp,
+  }
+  res.json(response)
 })
 
 const jwtRefreshTokenVerify = (req, res, next) => {

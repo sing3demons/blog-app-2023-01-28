@@ -1,20 +1,33 @@
 import './App.css'
-import Header from './Header.jsx'
 import Layout from './Layout.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Index from './pages/index.jsx'
 import { Route, Routes } from 'react-router-dom'
+import { UserContextProvider } from './userContext.js'
+import { positions, Provider as AlertProvider, transitions } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
+const options = {
+  timeout: 1000,
+  position: positions.TOP_RIGHT,
+  offset: '30px',
+  transition: transitions.SCALE,
+}
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" index element={<Index />} />
-        <Route path={'/login'} element={<Login />} />
-        <Route path={'/register'} element={<Register />} />
-      </Route>
-    </Routes>
+    <UserContextProvider>
+      <AlertProvider template={AlertTemplate} {...options}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" index element={<Index />} />
+          </Route>
+          <Route path={'/login'} element={<Login />} />
+          <Route path={'/register'} element={<Register />} />
+        </Routes>
+      </AlertProvider>
+    </UserContextProvider>
   )
 }
 

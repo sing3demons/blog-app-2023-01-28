@@ -31,7 +31,7 @@ export default function Register() {
       <h1>Register</h1>
       <input type="text" placeholder="username" {...register('username')} />
       <input type="password" placeholder="password" {...register('password')} />
-      <button>Register</button>
+      <button className="register">Register</button>
     </form>
   )
 }
