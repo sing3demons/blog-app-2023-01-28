@@ -28,15 +28,22 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body
     const user = await User.findOne({ username })
-    !user && res.status(404).json({ error: 'User not found' })
+    if (!user) throw new Error('User not found')
 
     const isValid = await user.checkPassword(password)
-    !isValid && res.status(400).json({ error: 'Invalid credentials' })
+    if (!isValid) throw new Error('Invalid credentials')
 
     const token = generateJWT(user)
     res.status(200).json(token)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
+  } catch ({ message }) {
+    switch (message) {
+      case 'Invalid credentials':
+        return res.status(400).json({ error: 'Invalid credentials' })
+      case 'User not found':
+        return res.status(404).json({ error: 'User not found' })
+      default:
+        return res.status(500).json({ error: message })
+    }
   }
 })
 

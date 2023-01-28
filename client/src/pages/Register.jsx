@@ -1,21 +1,37 @@
 import React from 'react'
+import { useAlert } from 'react-alert'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
-  const onSubmit = data => console.log(data)
+  const { register, handleSubmit } = useForm()
+
+  const navigate = useNavigate()
+  const alert = useAlert()
+
+  const onSubmit = async ({ username, password }) => {
+    const response = await fetch('http://127.0.0.1:8080/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+
+    const data = await response.json()
+
+    if (response.status !== 201) return alert.error(JSON.stringify(data))
+
+    alert.success('Registration successful')
+    navigate('/login')
+  }
 
   return (
-    <form className="login" onSubmit={handleSubmit(onSubmit)}>
+    <form className="register" onSubmit={handleSubmit(onSubmit)}>
       <h1>Register</h1>
       <input type="text" placeholder="username" {...register('username')} />
       <input type="password" placeholder="password" {...register('password')} />
-      <button>Login</button>
+      <button>Register</button>
     </form>
   )
 }

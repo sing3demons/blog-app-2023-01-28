@@ -11,9 +11,9 @@ const port = process.env.PORT || 3000
 
 connectDB()
 app.use(helmet())
-app.use(morgan('common'))
+app.use(morgan('dev'))
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
 app.use(express.json())
-app.use(cors())
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -22,20 +22,15 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routes/auth'))
 
 // Error handling Middleware function for logging the error message
-const errorLogger = (error, req, res, next) => {
-  console.log(`error ${error.message}`)
-  next(error)
-}
+const errorLogger = (error, req, res, next) => next(error)
+
 const errorResponder = (error, req, res, next) => {
   res.header('Content-Type', 'application/json')
   const status = error.status || 400
   res.status(status).json({ error: error.message })
 }
 
-const invalidPathHandler = (req, res, next) => {
-  res.status(404)
-  res.send('invalid path')
-}
+const invalidPathHandler = (req, res, next) => res.status(404).send('invalid path')
 
 app.use(errorLogger)
 app.use(errorResponder)
