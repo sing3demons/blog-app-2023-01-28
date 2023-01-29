@@ -36,5 +36,7 @@ services:
       - ACCESS_TOKEN_SECRET=EFDBD743-65D6-4B1E-A99C-B6EDC89E6512
       - REFRESH_TOKEN_SECRET=020E085C-4C7D-4FDB-A11F-3EADA8F2464C
       - CLIENT_URL=http://localhost:3000
+    volumes:
+      - ./api/public:/app/backend/public
     depends_on:
       - mongo

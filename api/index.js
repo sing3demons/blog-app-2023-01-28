@@ -4,6 +4,8 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const connectDB = require('./db')
+const fs = require('fs')
+const path = require('path')
 
 const app = express()
 dotenv.config({ path: '.env.dev' })
@@ -13,13 +15,22 @@ connectDB()
 app.use(helmet())
 app.use(morgan('dev'))
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ extended: false }))
 
-app.get('/', (req, res) => {
+const dir = path.join('public', 'images')
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true })
+}
+
+app.use('/images', express.static(path.join(__dirname, '/', dir)))
+
+app.post('/', (req, res) => {
   res.send('Hello World!')
 })
 
 app.use('/api/auth', require('./routes/auth'))
+app.use('/api/post', require('./routes/post'))
 
 // Error handling Middleware function for logging the error message
 const errorLogger = (error, req, res, next) => next(error)

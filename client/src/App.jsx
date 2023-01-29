@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom'
 import { UserContextProvider } from './userContext.js'
 import { positions, Provider as AlertProvider, transitions } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
+import CreatePost from './pages/CreatePost.jsx'
 
 const options = {
   timeout: 1000,
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/" index element={<Index />} />
+            <Route path="/create" index element={<CreatePost />} />
           </Route>
           <Route path={'/login'} element={<Login />} />
           <Route path={'/register'} element={<Register />} />
