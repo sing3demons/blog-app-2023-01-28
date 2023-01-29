@@ -12,7 +12,8 @@ dotenv.config({ path: '.env.dev' })
 const port = process.env.PORT || 3000
 
 connectDB()
-app.use(helmet())
+app.use(helmet({ crossOriginResourcePolicy: false, originWhitelist: [process.env.CLIENT_URL] }))
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }))
 app.use(morgan('dev'))
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
 app.use(express.json({ limit: '50mb' }))
