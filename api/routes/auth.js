@@ -59,7 +59,6 @@ const jwtValidate = (req, res, next) => {
     req.tokenDt = tokenDt
     next()
   } catch (error) {
-    console.log(error)
     return res.sendStatus(403)
   }
 }

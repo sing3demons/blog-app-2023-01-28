@@ -9,33 +9,42 @@ export default function Header() {
   const navigate = useNavigate()
   const alert = useAlert()
 
-  console.log(userInfo)
+  const fetchData = async ({ accessToken, refreshToken }) => {
+    const response = await fetch('http://127.0.0.1:8080/api/auth/profile', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+    })
+    // console.log(response.status)
+
+    if (response.status === 403) {
+      const result = await fetch('http://127.0.0.1:8080/api/auth/refresh-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${refreshToken}` },
+      })
+
+      const newToken = await result.json()
+      localStorage.removeItem('token')
+      localStorage.removeItem('profile')
+      localStorage.setItem('token', JSON.stringify(newToken))
+      navigate(0)
+      console.log('refresh token')
+      console.log(newToken)
+    }
+    const data = await response.json()
+    setUserInfo(data)
+    localStorage.setItem('profile', JSON.stringify(data))
+    setLoading(false)
+  }
 
   useEffect(() => {
     setLoading(true)
-
     const token = localStorage.getItem('token')
-
+    // console.log(JSON.parse(token))
     if (token) {
-      const { accessToken } = JSON.parse(token)
-      console.log(accessToken)
-
-      const fetchData = async () => {
-        const response = await fetch('http://127.0.0.1:8080/api/auth/profile', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-        })
-        const data = await response.json()
-
-        console.log(data)
-
-        setUserInfo(data)
-        localStorage.setItem('profile', JSON.stringify(data))
-        setLoading(false)
-      }
-
-      fetchData()
+      // const { accessToken, refreshToken } = JSON.parse(token)
+      fetchData(JSON.parse(token)).catch(err => navigate('/login'))
     } else {
+      navigate('/login')
       setLoading(false)
     }
   }, [])
@@ -43,11 +52,11 @@ export default function Header() {
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('profile')
-    alert.success('logout')
+    alert.show('logout', { timeout: 2000, position: 'top center' })
 
     setUserInfo(null)
     navigate('/login')
-    navigate(0)
+    // navigate(0)
   }
   const { username } = userInfo
 

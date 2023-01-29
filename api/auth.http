@@ -28,3 +28,8 @@ Content-Type: application/json
 GET {{uri}}/auth/profile
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+###
+POST {{uri}}/auth/refresh-token
+Content-Type: application/json
+Authorization: Bearer {{refreshToken}}

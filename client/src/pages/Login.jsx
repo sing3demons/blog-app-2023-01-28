@@ -38,12 +38,14 @@ export default function Login() {
       <input type="text" placeholder="username" {...register('username')} />
       <input type="password" placeholder="password" {...register('password')} />
       <div className="login">
-        <button onClick={() => navigate('/register')} className="button">
+        <button onClick={() => navigate('/register')} className="button" type="button">
           สมัครสมาชิก
         </button>
-        <button className="login">Login</button>
+        <button className="login" type="submit">
+          Login
+        </button>
       </div>
-      <button onClick={() => navigate('/register')} className="button">
+      <button onClick={() => navigate('/register')} type="button" className="button">
         ลืมรหัสผ่าน?
       </button>
     </form>
