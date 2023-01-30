@@ -1,19 +1,23 @@
 import React, { useState } from 'react'
 import { useAlert } from 'react-alert'
 import { useForm } from 'react-hook-form'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useNavigate } from 'react-router-dom'
+import Resizer from 'react-image-file-resizer'
+import Editor from '../Editor.jsx'
 
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-    ['link', 'image'],
-    ['clean'],
-  ],
-}
+const resizeFile = file =>
+  new Promise(resolve => {
+    Resizer.imageFileResizer(file, 300, 300, 'JPEG', 100, 0, uri => resolve(uri), 'base64')
+  })
+
+const convertFileToBase64 = file =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+  })
 
 export default function CreatePost() {
   const navigate = useNavigate()
@@ -21,25 +25,14 @@ export default function CreatePost() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
   const [image, setImage] = useState({ preview: '', raw: '' })
   const [content, setContent] = useState('')
 
-  function convertFileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = reject
-    })
-  }
-
   const createNewPost = async data => {
-    // const uploadedImageBase64 = await convertFileToBase64(image.raw)
-    const uploadedImageBase64 = await convertFileToBase64(data.image[0])
-    data.image = uploadedImageBase64
+    // const uploadedImageBase64 = await convertFileToBase64(image)
+    data.image = await resizeFile(data.image[0])
     data.content = content
 
     const token = localStorage.getItem('token')
@@ -84,8 +77,7 @@ export default function CreatePost() {
         <h5 className="text-center">Upload your photo</h5>
       )}
       <input type="file" {...register('image', { required: true })} onChange={handleChange} />
-
-      <ReactQuill value={content} onChange={setContent} modules={modules} />
+      <Editor value={content} onChange={setContent} />
       <button style={{ marginTop: '5px' }} type="submit">
         Create post
       </button>

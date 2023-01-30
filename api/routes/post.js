@@ -6,8 +6,20 @@ const { jwtValidate } = require('../middleware/jwt.js')
 
 router.get('/', async (req, res) => {
   try {
-    const posts = await Post.find()
+    const posts = await Post.find().populate('author', ['username']).sort({ createdAt: -1 })
     res.status(200).json(posts)
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    })
+  }
+})
+
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const post = await Post.findById(id).populate('author', ['username'])
+    res.status(200).json(post)
   } catch (error) {
     return res.status(500).json({
       message: error.message,
