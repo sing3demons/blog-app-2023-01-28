@@ -3,7 +3,9 @@ const { saveImageToDisk } = require('../utils/uploads.js')
 
 exports.PostList = async req => {
   try {
-    // const posts = await Post.find().populate('author', ['username']).sort({ createdAt: -1 })
+    //   const posts = await Post.find()
+    //       .populate('author', ['username'])
+    //       .sort({ createdAt: -1 })
 
     return await Post.aggregate([
       {
@@ -61,7 +63,7 @@ exports.createPost = async req => {
       content: content,
       author: userId,
     })
-      
+
     return await post.save()
   } catch (error) {
     throw new Error(error.message)
@@ -71,6 +73,19 @@ exports.createPost = async req => {
 exports.editPost = async req => {
   try {
     const { id } = req.params
+    const { userId } = req.tokenDt
+
+    if (req.body.image) {
+      const photo = await saveImageToDisk(req.body.image)
+      req.body.cover = photo
+    }
+
+    if (req.body.author) {
+      if (req.body.author !== userId) {
+        throw new Error('You are not authorized to edit this post')
+      }
+    }
+
     return await Post.findByIdAndUpdate(id, { ...req.body }, { new: true })
   } catch (error) {
     throw new Error(error.message)

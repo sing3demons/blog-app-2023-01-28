@@ -46,4 +46,15 @@ router.post('/', jwtValidate, async (req, res) => {
   }
 })
 
+router.patch('/:id', jwtValidate, async (req, res) => {
+  try {
+    const post = await controller.editPost(req)
+
+    res.status(200).json(post)
+  } catch ({ message }) {
+    console.log(message)
+    throwError(message)
+  }
+})
+
 module.exports = router

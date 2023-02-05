@@ -32,23 +32,21 @@ export default function PostList() {
         posts.map(({ _id, title, author, createdAt, summary, cover }) => {
           // console.log(post)
           return (
-            <>
-              <div className="post" key={_id}>
-                <div className="image">
-                  <Link to={`post/${_id}`}>
-                    <img src={`http://localhost:8080/images/${cover}`} alt="" />
-                  </Link>
-                </div>
-                <div className="texts">
-                  <h2>{title}</h2>
-                  <p className="info">
-                    <a className="author">{author.username}</a>
-                    <time>{formatISO9075(new Date(createdAt))}</time>
-                  </p>
-                  <p className="summary">{summary}</p>
-                </div>
+            <div className="post" key={_id}>
+              <div className="image">
+                <Link to={`post/${_id}`}>
+                  <img src={`http://localhost:8080/images/${cover}`} alt="" />
+                </Link>
               </div>
-            </>
+              <div className="texts">
+                <h2>{title}</h2>
+                <p className="info">
+                  <a className="author">{author.username}</a>
+                  <time>{formatISO9075(new Date(createdAt))}</time>
+                </p>
+                <p className="summary">{summary}</p>
+              </div>
+            </div>
           )
         })}
     </>

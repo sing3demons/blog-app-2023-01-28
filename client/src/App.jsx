@@ -9,6 +9,7 @@ import { positions, Provider as AlertProvider, transitions } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import CreatePost from './pages/CreatePost.jsx'
 import PostItem from './pages/PostItem.jsx'
+import EditPost from './pages/EditPost.jsx'
 
 const options = {
   timeout: 1000,
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" index element={<Index />} />
             <Route path="/create" index element={<CreatePost />} />
             <Route path="/post/:id" index element={<PostItem />} />
+            <Route path="/edit/:id" index element={<EditPost />} />
           </Route>
           <Route path={'/login'} element={<Login />} />
           <Route path={'/register'} element={<Register />} />

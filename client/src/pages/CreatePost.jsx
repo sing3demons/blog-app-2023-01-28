@@ -3,35 +3,18 @@ import { useAlert } from 'react-alert'
 import { useForm } from 'react-hook-form'
 import 'react-quill/dist/quill.snow.css'
 import { useNavigate } from 'react-router-dom'
-import Resizer from 'react-image-file-resizer'
+
 import Editor from '../Editor.jsx'
-
-const resizeFile = file =>
-  new Promise(resolve => {
-    Resizer.imageFileResizer(file, 300, 300, 'JPEG', 100, 0, uri => resolve(uri), 'base64')
-  })
-
-const convertFileToBase64 = file =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = reject
-  })
+import { resizeFile } from '../utils/uploadFile.js'
 
 export default function CreatePost() {
   const navigate = useNavigate()
   const alert = useAlert()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit } = useForm()
   const [image, setImage] = useState({ preview: '', raw: '' })
   const [content, setContent] = useState('')
 
   const createNewPost = async data => {
-    // const uploadedImageBase64 = await convertFileToBase64(image)
     data.image = await resizeFile(data.image[0])
     data.content = content
 
