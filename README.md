@@ -11,4 +11,5 @@ yarn start
 ## production
 ```
 docker compose -f docker-compose.prod.yml up -d
+docker-compose down --remove-orphans
 ```
