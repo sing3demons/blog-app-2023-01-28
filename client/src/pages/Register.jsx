@@ -2,6 +2,7 @@ import React from 'react'
 import { useAlert } from 'react-alert'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { URI } from '../utils/constant.js'
 
 export default function Register() {
   const { register, handleSubmit } = useForm()
@@ -10,7 +11,7 @@ export default function Register() {
   const alert = useAlert()
 
   const onSubmit = async ({ username, password }) => {
-    const response = await fetch('http://127.0.0.1:8080/api/auth/register', {
+    const response = await fetch(URI + 'auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

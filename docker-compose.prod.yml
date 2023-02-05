@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:6.0.3
+    container_name: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=p@ssw0rd
+      - MONGO_INITDB_DATABASE=node-api
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - ./_data:/data/db
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://root:p%40ssw0rd@mongo:27017
+      - MONGO_DATABASE=node-api
+      - ACCESS_TOKEN_SECRET=EFDBD743-65D6-4B1E-A99C-B6EDC89E6512
+      - REFRESH_TOKEN_SECRET=020E085C-4C7D-4FDB-A11F-3EADA8F2464C
+      - CLIENT_URL=http://localhost
+    volumes:
+      - ./api/public:/app/backend/public
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - REACT_APP_API_URL=http://backend:8080
+    depends_on:
+      - backend

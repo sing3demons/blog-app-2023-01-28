@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 
 import { UserContext } from '../userContext.js'
+import { URI } from '../utils/constant.js'
 
 export default function Login() {
   const { register, handleSubmit } = useForm()
@@ -13,7 +14,7 @@ export default function Login() {
   const { setUserInfo } = useContext(UserContext)
 
   const onSubmit = async ({ username, password }) => {
-    const response = await fetch('http://127.0.0.1:8080/api/auth/login', {
+    const response = await fetch(URI + 'auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

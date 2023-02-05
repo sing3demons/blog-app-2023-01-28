@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useAlert } from 'react-alert'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from './userContext.js'
+import { URI } from './utils/constant.js'
 
 export default function Header() {
   const [loading, setLoading] = useState(true)
@@ -11,14 +12,14 @@ export default function Header() {
 
   const fetchData = async ({ accessToken, refreshToken }) => {
     try {
-      const response = await fetch('http://127.0.0.1:8080/api/auth/profile', {
+      const response = await fetch(URI + 'auth/profile', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
       })
       // console.log(response.status)
 
       if (response.status === 403) {
-        const result = await fetch('http://127.0.0.1:8080/api/auth/refresh-token', {
+        const result = await fetch(URI + 'auth/refresh-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${refreshToken}` },
         })

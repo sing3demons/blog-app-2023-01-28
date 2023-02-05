@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Editor from '../Editor.jsx'
 import { Navigate, useParams } from 'react-router-dom'
 import { resizeFile } from '../utils/uploadFile.js'
+import { URI } from '../utils/constant.js'
 
 export default function EditPost() {
   const { id } = useParams()
@@ -12,7 +13,7 @@ export default function EditPost() {
   const [redirect, setRedirect] = useState(false)
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8080/api/post/' + id).then(response => {
+    fetch(URI + 'post/' + id).then(response => {
       response.json().then(postInfo => {
         setTitle(postInfo.title)
         setContent(postInfo.content)
@@ -36,7 +37,7 @@ export default function EditPost() {
     const token = localStorage.getItem('token')
     const { accessToken } = JSON.parse(token)
 
-    const response = await fetch('http://127.0.0.1:8080/api/post/' + id, {
+    const response = await fetch(URI + 'post/' + id, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

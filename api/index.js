@@ -15,7 +15,9 @@ connectDB()
 app.use(helmet({ crossOriginResourcePolicy: false, originWhitelist: [process.env.CLIENT_URL] }))
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }))
 app.use(morgan('dev'))
-app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
+
+const corsOptions = { credentials: true, origin: process.env.CLIENT_URL }
+app.use(cors(corsOptions))
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: false }))
 

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { formatISO9075 } from 'date-fns'
 import { Link } from 'react-router-dom'
-import { UserContext } from '../userContext.js'
+import { BASE_URI, URI } from '../utils/constant.js'
 
 export default function PostItem() {
   const [postInfo, setPostInfo] = useState({})
@@ -10,7 +10,7 @@ export default function PostItem() {
   const { id } = useParams()
 
   const fetchPost = async id => {
-    const response = await fetch(`http://127.0.0.1:8080/api/post/${id}`, {
+    const response = await fetch(URI + `post/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export default function PostItem() {
     const data = await response.json()
     if (response.ok) {
       setPostInfo(data)
-      console.log(data)
+
       setLoading(false)
     }
   }
@@ -61,7 +61,7 @@ export default function PostItem() {
         </div>
       )}
       <div className="image">
-        <img src={`http://localhost:8080/images/${cover}`} alt="" />
+        <img src={`${BASE_URI}/images/${cover}`} alt="" />
       </div>
       <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
     </div>

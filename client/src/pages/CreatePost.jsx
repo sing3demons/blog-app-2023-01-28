@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Editor from '../Editor.jsx'
 import { resizeFile } from '../utils/uploadFile.js'
+import { URI } from '../utils/constant.js'
 
 export default function CreatePost() {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function CreatePost() {
     const { accessToken } = JSON.parse(token)
     console.log(accessToken)
 
-    const response = await fetch('http://127.0.0.1:8080/api/post', {
+    const response = await fetch(URI + 'post', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
