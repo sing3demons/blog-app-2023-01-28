@@ -3,6 +3,7 @@ const router = Router()
 
 const { jwtValidate, jwtRefreshTokenVerify } = require('../middleware/jwt')
 
+const controller = require('../controllers/user')
 const throwError = message => {
   switch (message) {
     case 'Invalid credentials':
@@ -13,8 +14,6 @@ const throwError = message => {
       return res.status(500).json({ error: message })
   }
 }
-
-const controller = require('../controllers/user')
 
 router.post('/register', async (req, res) => {
   try {
