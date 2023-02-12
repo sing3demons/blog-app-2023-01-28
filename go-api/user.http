@@ -9,3 +9,21 @@ Content-Type: application/json
   "username": "sing3demons",
   "password": "123456"
 }
+
+### login
+# @name authen
+POST {{uri}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "sing3demons",
+  "password": "123456"
+}
+
+@token = {{authen.response.body.$.access_token}}
+@refreshToken = {{authen.response.body.$.refresh_token}}
+
+### get user info
+GET {{uri}}/auth/profile HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}

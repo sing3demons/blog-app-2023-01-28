@@ -23,7 +23,7 @@ import (
 )
 
 func (tx *handler) collection() *mongo.Collection {
-	return tx.db.Collection("products")
+	return tx.db.Collection("posts")
 }
 
 func (h *handler) GetPosts(c *gin.Context) {
@@ -119,7 +119,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	input := Post{
+	document := Post{
 		Title:   post.Title,
 		Summary: post.Summary,
 		Content: post.Content,
@@ -130,7 +130,7 @@ func (h *handler) CreatePost(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, err := h.collection().InsertOne(ctx, input)
+	result, err := h.collection().InsertOne(ctx, document)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

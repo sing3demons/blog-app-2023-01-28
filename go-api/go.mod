@@ -4,8 +4,11 @@ go 1.19
 
 require (
 	github.com/disintegration/imaging v1.6.2
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.2
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/h2non/filetype v1.1.3
+	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.11.1
 	golang.org/x/crypto v0.5.0
 )
@@ -19,7 +22,6 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
