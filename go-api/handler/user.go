@@ -52,6 +52,45 @@ func (h *userHandler) Profile(c *gin.Context) {
 	})
 }
 
+func (h *userHandler) RefreshToken(c *gin.Context) {
+	id, _ := c.Get("userId")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	user := model.User{}
+
+	objectID, err := primitive.ObjectIDFromHex(string(id.(string)))
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	if err := h.collection().FindOne(ctx, filter).Decode(&user); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	accessToken, err := generateFromAccessToken(user)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	refreshToken, err := generateFromRefreshToken(user)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+	})
+}
+
 func (h *userHandler) Login(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {

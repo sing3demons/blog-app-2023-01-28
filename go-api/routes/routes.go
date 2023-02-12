@@ -21,12 +21,14 @@ func Router(r *gin.Engine) {
 	}
 
 	authenticate := middleware.JwtVerify()
+	refresh := middleware.JwtRefreshTokenVerify()
 
 	users := api.Group("auth")
 	userHandler := handler.NewUserHandler(db)
 	{
 		users.POST("register", userHandler.Register)
 		users.POST("login", userHandler.Login)
+		users.POST("refresh-token", refresh, userHandler.RefreshToken)
 		users.Use(authenticate)
 		users.GET("profile", userHandler.Profile)
 	}
