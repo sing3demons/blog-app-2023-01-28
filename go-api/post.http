@@ -2,3 +2,12 @@
 
 
 GET {{uri}}/post HTTP/1.1
+
+###
+GET {{uri}}/post/all HTTP/1.1
+
+###
+POST {{uri}}/post HTTP/1.1
+Content-Type: application/json
+
+

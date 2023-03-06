@@ -31,7 +31,36 @@ func (h *handler) GetPosts(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cursor, err := h.collection().Find(ctx, bson.M{})
+	// cursor, err := h.collection().Find(ctx, bson.M{})
+	lookup := bson.D{
+		{Key: "$lookup",
+			Value: bson.D{
+				{Key: "from", Value: "users"},
+				{Key: "localField", Value: "author"},
+				{Key: "foreignField", Value: "_id"},
+				{Key: "as", Value: "author"},
+			},
+		},
+	}
+
+	unwind := bson.D{{Key: "$unwind", Value: "$author"}}
+
+	project := bson.D{
+		{Key: "$project",
+			Value: bson.D{
+				{Key: "_id", Value: 1},
+				{Key: "title", Value: 1},
+				{Key: "summary", Value: 1},
+				{Key: "content", Value: 1},
+				{Key: "cover", Value: 1},
+				{Key: "createdAt", Value: 1},
+				{Key: "updatedAt", Value: 1},
+				{Key: "author", Value: "$author.username"},
+			},
+		},
+	}
+
+	cursor, err := h.collection().Aggregate(ctx, mongo.Pipeline{lookup, unwind, project})
 
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})

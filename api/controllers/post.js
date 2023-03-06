@@ -40,6 +40,15 @@ exports.PostList = async req => {
   }
 }
 
+exports.PostListPopulate = async req => {
+  try {
+    return await Post.find().sort({ createdAt: -1 })
+    // .populate('author', ['username']).sort({ createdAt: -1 })
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 exports.getPost = async req => {
   try {
     const { id } = req.params

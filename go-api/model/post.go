@@ -8,5 +8,5 @@ type Post struct {
 	Summary string             `bson:"summary" json:"summary"`
 	Content string             `bson:"content" json:"content"`
 	Cover   string             `bson:"cover" json:"cover"`
-	Author  primitive.ObjectID `bson:"author" json:"author"`
+	Author  string             `bson:"author" json:"author"`
 }

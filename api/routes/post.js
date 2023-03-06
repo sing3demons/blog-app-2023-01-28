@@ -17,8 +17,21 @@ const throwError = message => {
 
 router.get('/', async (req, res) => {
   try {
+    console.time('find')
+    const posts = await controller.PostListPopulate(req)
+    res.status(200).json(posts)
+    console.timeEnd('find')
+  } catch ({ message }) {
+    throwError(message)
+  }
+})
+
+router.get('/all', async (req, res) => {
+  try {
+    console.time('find')
     const posts = await controller.PostList(req)
     res.status(200).json(posts)
+    console.timeEnd('find')
   } catch ({ message }) {
     throwError(message)
   }
